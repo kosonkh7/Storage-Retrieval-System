@@ -2,11 +2,9 @@
 
 # SQLAlchemy ORM 기본 도구 + 관계 설정
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from app.core.base import Base  # core에서 Base 가져오기
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
-
-Base = declarative_base()
 
 class Inventory(Base):
     __tablename__ = "inventory"  # 테이블 이름

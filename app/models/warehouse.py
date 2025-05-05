@@ -1,11 +1,9 @@
 # 물류센터 정보를 저장하는 Warehouse 테이블 정의
 
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from app.core.base import Base  # core에서 Base 가져오기
 from datetime import datetime, timezone
 
-# SQLAlchemy의 Base 클래스 생성 (모든 테이블의 부모 클래스)
-Base = declarative_base()
 """
 SQLAlchemy의 모든 모델은 이 Base를 상속받아 정의해.
 
