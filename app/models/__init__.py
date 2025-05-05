@@ -2,3 +2,4 @@
 
 from .warehouse import Warehouse
 from .inventory import Inventory
+from .inventory_transaction import InventoryTransaction
