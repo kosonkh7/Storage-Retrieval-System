@@ -24,6 +24,13 @@ def get_db():
         db.close()
 
 # POST /warehouse/ - 새 물류센터 등록
+"""
+요청 JSON → SQLAlchemy 모델 변환
+
+저장하고 commit
+
+다시 읽어 최신 상태 반환
+"""
 @router.post("/", response_model=warehouse_schema.WarehouseResponse)
 def create_warehouse(warehouse: warehouse_schema.WarehouseCreate, db: Session = Depends(get_db)):
     db_warehouse = models.warehouse.Warehouse(**warehouse.dict())
@@ -33,6 +40,11 @@ def create_warehouse(warehouse: warehouse_schema.WarehouseCreate, db: Session = 
     return db_warehouse
 
 # GET /warehouse/ - 전체 물류센터 조회
+"""
+여러 개의 Warehouse 응답
+
+페이지네이션 기본값: skip=0, limit=100
+"""
 @router.get("/", response_model=List[warehouse_schema.WarehouseResponse])
 def read_warehouses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     warehouses = db.query(models.warehouse.Warehouse).offset(skip).limit(limit).all()
