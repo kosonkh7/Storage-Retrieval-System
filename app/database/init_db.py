@@ -13,3 +13,5 @@ def init_db():
 # 직접 실행할 수 있게 설정
 if __name__ == "__main__":
     init_db()
+
+# 실행 코드 -> python -m app.database.init_db
