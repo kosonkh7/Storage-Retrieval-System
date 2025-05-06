@@ -14,7 +14,7 @@ from typing import List
 from app.database.session import SessionLocal # DB 세션을 만들고 반환하는 함수 (SQLAlchemy 연결)
 from app.database.session import get_db
 from app import models # DB 테이블 정의
-from app.schemas import inventory as inventory_schema # 요청/응답 스키마 정의 (Pydantic)
+from app.schemas import inventory_transaction as inventory_schema # 요청/응답 스키마 정의 (Pydantic)
 
 
 """
