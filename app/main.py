@@ -23,5 +23,7 @@ app.include_router(inventory.router)
 def root():
     return {"message": "Welcome to the Inventory Management API!"}
 
-
-# 테스트 코드 : uvicorn app.main:app --reload
+# import uvicorn
+# if __name__ == '__main__':
+#    uvicorn.run('main:app', reload=True)
+# 테스트 코드 : uvicorn app.main:app --reload  // python -m uvicorn app.main:app --reload
