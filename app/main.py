@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from app.routers import warehouse
 from app.routers import inventory
+from app.routers import inventory_router
 
 
 # FastAPI 앱 인스턴스 생성
@@ -17,6 +18,7 @@ app = FastAPI(
 # POST, GET API가 메인 앱에서 바로 작동
 app.include_router(warehouse.router)
 app.include_router(inventory.router)
+app.include_router(inventory_router.router)
 
 # 루트 경로 기본 응답
 @app.get("/")
