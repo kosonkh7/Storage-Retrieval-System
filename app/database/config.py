@@ -15,9 +15,6 @@ DB_NAME = os.getenv("DB_NAME")
 # SQLAlchemy 연결 문자열 구성
 # 형식: dialect+driver://username:password@host:port/database
 SQLALCHEMY_DATABASE_URL = (
-    "mysql+pymysql://root:aivle202406@127.0.0.1:3306/transSys"
-)
-SQLALCHEMY_DATABASE_URL = (
     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
