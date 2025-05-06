@@ -22,3 +22,19 @@ def get_inventory_by_warehouse(warehouse_id: int, db: Session = Depends(get_db))
     if not inventory:
         raise HTTPException(status_code=404, detail="재고 정보가 없습니다.")
     return inventory
+
+# 특정 창고의 특정 품목 재고만 반환
+@router.get("/{warehouse_id}/{product_id}", response_model=InventoryResponse)
+def get_inventory_by_warehouse_and_product(
+    warehouse_id: int,
+    product_id: int,
+    db: Session = Depends(get_db)
+):
+    inventory = db.query(Inventory).filter(
+        Inventory.warehouse_id == warehouse_id,
+        Inventory.product_id == product_id
+    ).first()
+
+    if not inventory:
+        raise HTTPException(status_code=404, detail="재고 정보가 없습니다.")
+    return inventory
