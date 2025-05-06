@@ -27,3 +27,17 @@ autocommit=False: 직접 commit 해야 DB 반영됨
 
 autoflush=False: 커밋 전까지 DB에 반영 안 됨 (명시적 처리 권장)
 """
+
+# FastAPI의 DB 세션 의존성 주입 패턴
+def get_db():
+    db = SessionLocal() # 세션을 하나 생성
+    try:
+        yield db # 호출한 쪽(FastAPI 라우터)로 세션을 넘겨줌. (yield 쓰면 제너레이터 함수)
+    finally:
+        db.close() # router 처리가 끝나면 자동으로 세션을 닫음
+"""
+실수로 session.close() 안 하면 커넥션 누수가 생길 수 있다.
+DB 세션을 만들고 → 요청 처리 중 주입 → 요청 끝나면 finally에서 자동으로 닫힘. (메모리 누수 방지! & 연결 안전하게 관리!)
+FastAPI 공식 권장 방식이고,
+SQLAlchemy + FastAPI 조합에서는 거의 필수적으로 쓰는 패턴
+"""

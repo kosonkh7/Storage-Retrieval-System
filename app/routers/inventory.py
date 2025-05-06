@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.database.session import SessionLocal # DB 세션을 만들고 반환하는 함수 (SQLAlchemy 연결)
+from app.database.session import get_db
 from app import models # DB 테이블 정의
 from app.schemas import inventory as inventory_schema # 요청/응답 스키마 정의 (Pydantic)
 
@@ -26,14 +27,6 @@ router = APIRouter(
     tags=["InventoryTransaction"],
 )
 
-# FastAPI의 DB 세션 의존성 주입 패턴
-# DB 세션을 만들고 → 요청 처리 중 주입 → 요청 끝나면 finally에서 자동으로 닫힘. (메모리 누수 방지 & 연결 안전하게 관리)
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # POST: 입출고 트랜잭션 등록
 """

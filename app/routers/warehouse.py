@@ -7,21 +7,15 @@ from typing import List # 여러 개의 응답 처리
 # DB 세션 설정 파일 불러오기
 # SQLAlchemy 모델 & Pydantic 스키마 불러오기
 from app.database.session import SessionLocal
+from app.database.session import get_db
 from app import models
 from app.schemas import warehouse as warehouse_schema
+
 
 router = APIRouter(
     prefix="/warehouse",
     tags=["Warehouse"],
 )
-
-# DB 세션 의존성 주입
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # POST /warehouse/ - 새 물류센터 등록
 """

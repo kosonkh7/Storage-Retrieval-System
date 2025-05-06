@@ -2,19 +2,21 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database.session import get_db
 from app.models.inventory import Inventory
-from app.schemas.inventory_schema import InventoryOut
+from app.schemas.inventory_schema import InventoryResponse
 
 router = APIRouter(
     prefix="/inventory",
     tags=["Inventory"]
 )
 
-@router.get("/", response_model=list[InventoryOut])
+# 전체 재고 목록을 반환
+@router.get("/", response_model=list[InventoryResponse])
 def get_all_inventory(db: Session = Depends(get_db)):
     inventory = db.query(Inventory).all()
     return inventory
 
-@router.get("/{warehouse_id}", response_model=list[InventoryOut])
+# 특정 창고의 재고만 반환
+@router.get("/{warehouse_id}", response_model=list[InventoryResponse])
 def get_inventory_by_warehouse(warehouse_id: int, db: Session = Depends(get_db)):
     inventory = db.query(Inventory).filter(Inventory.warehouse_id == warehouse_id).all()
     if not inventory:

@@ -30,8 +30,8 @@ print(f"✅ {len(warehouse_df)}개의 warehouse 데이터 삽입 완료.")
 # 3️⃣ logistics.csv 읽기 (출고 데이터)
 logistics_df = pd.read_csv('app/database/seed_data/logistics.csv', encoding="euc-kr")
 
-# 2023-04-01만 추출 (초기 재고로 삼음)
-logistics_df = logistics_df[logistics_df['date'] == 20230401]
+# 2023-04-17만 추출 (초기 재고로 삼음)
+logistics_df = logistics_df[logistics_df['date'] == 20230417]
 
 # 품목군 매핑 (CSV 컬럼명 -> product_id)
 product_map = {
