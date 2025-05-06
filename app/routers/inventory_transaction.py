@@ -9,12 +9,12 @@ List: 응답이 여러 건 반환될 때 사용
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from app.database.session import SessionLocal # DB 세션을 만들고 반환하는 함수 (SQLAlchemy 연결)
 from app.database.session import get_db
 from app import models # DB 테이블 정의
-from app.schemas import inventory_transaction as inventory_schema # 요청/응답 스키마 정의 (Pydantic)
+from app.schemas import inventory_transaction # 요청/응답 스키마 정의 (Pydantic)
 
 
 """
@@ -35,9 +35,9 @@ response_model: 이 함수의 반환 값을 자동으로 InventoryTransactionRes
 transaction: 클라이언트가 보낸 JSON → InventoryTransactionCreate 스키마로 자동 검증
 db: DB 세션 (FastAPI가 get_db()로 주입)
 """
-@router.post("/", response_model=inventory_schema.InventoryTransactionResponse)
+@router.post("/", response_model=inventory_transaction.InventoryTransactionResponse)
 def create_transaction(
-    transaction: inventory_schema.InventoryTransactionCreate,
+    transaction: inventory_transaction.InventoryTransactionCreate,
     db: Session = Depends(get_db)
 ):
     # 1️⃣ 대상 재고 가져오기
@@ -81,7 +81,7 @@ def create_transaction(
     return db_transaction
 
 # GET: 전체 트랜잭션 조회
-@router.get("/", response_model=List[inventory_schema.InventoryTransactionResponse])
+@router.get("/", response_model=List[inventory_transaction.InventoryTransactionResponse])
 def read_transactions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     transactions = db.query(models.inventory_transaction.InventoryTransaction).offset(skip).limit(limit).all()
     return transactions # 결과는 트랜잭션 리스트 반환
@@ -93,3 +93,29 @@ DB 세션 의존성:	FastAPI에서 가장 안정적인 DB 연결 방식
 트랜잭션 기록 + 실시간 재고:	재고 꼬임 문제 방지 & 감사 추적 가능
 orm_mode:	SQLAlchemy → Pydantic 변환 쉽게 처리
 """
+
+# GET: 특정 재고(inventory_id)에 대한 이력만 조회
+@router.get("/{inventory_id}", response_model=List[inventory_transaction.InventoryTransactionResponse])
+def read_transactions_by_inventory(
+    inventory_id: int,
+    transaction_type: Optional[str] = None,
+    db: Session = Depends(get_db)
+):  
+    # 쿼리 시작: 특정 inventory_id의 이력만 조회
+    query = db.query(models.inventory_transaction.InventoryTransaction).filter(
+        models.inventory_transaction.InventoryTransaction.inventory_id == inventory_id
+    )
+    # 트랜잭션 타입이 지정되면 필터 추가 ('in' 또는 'out')
+    if transaction_type:
+        if transaction_type not in ["in", "out"]:
+            raise HTTPException(status_code=400, detail="Invalid transaction type")
+        query = query.filter(models.inventory_transaction.InventoryTransaction.transaction_type == transaction_type)
+
+    # 최종 결과 가져오기
+    transactions = query.all()
+
+    if not transactions:
+        raise HTTPException(status_code=404, detail="입출고 이력이 없습니다.")
+    
+    # 결과 반환 (FastAPI가 자동으로 스키마에 맞춰 Pydantic 스키마로 직렬화)
+    return transactions
