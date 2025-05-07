@@ -12,7 +12,7 @@ router = APIRouter(
 # 전체 재고 목록을 반환
 @router.get("/", response_model=list[InventoryResponse])
 def get_all_inventory(db: Session = Depends(get_db)):
-    inventory = db.query(Inventory).all()
+    inventory = db.query(Inventory).all() # SQLAlchemy orm_mode 덕분에 join된 product까지 직렬화됨
     return inventory
 
 # 특정 창고의 재고만 반환
