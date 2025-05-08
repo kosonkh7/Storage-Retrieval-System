@@ -8,7 +8,8 @@ Session: SQLAlchemy DB 연결 세션 타입
 List: 응답이 여러 건 반환될 때 사용
 """
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session, with_for_update
 from typing import List, Optional
 
 from app.database.session import SessionLocal # DB 세션을 만들고 반환하는 함수 (SQLAlchemy 연결)
@@ -40,45 +41,50 @@ def create_transaction(
     transaction: inventory_transaction.InventoryTransactionCreate,
     db: Session = Depends(get_db)
 ):
-    # 1️⃣ 대상 재고 가져오기
-    inventory = db.query(models.inventory.Inventory).filter(
-        models.inventory.Inventory.id == transaction.inventory_id
-    ).first()
-    if not inventory: # 재고 없으면 404 에러
-        raise HTTPException(status_code=404, detail="Inventory not found")
+    try:
+        # 1️⃣ 대상 재고 가져오기 (락 걸기)
+        stmt = select(models.inventory.Inventory).where(
+            models.inventory.Inventory.id == transaction.inventory_id
+        ).with_for_update()
+        inventory = db.execute(stmt).scalar_one_or_none()
 
-    # 2️⃣ 입고/출고 반영
-    if transaction.transaction_type not in ["in", "out"]: # 타입 체크: 'in', 'out' 외 값이 오면 400 에러
-        raise HTTPException(status_code=400, detail="Invalid transaction type")
+        if not inventory:
+            raise HTTPException(status_code=404, detail="Inventory not found")
 
-    before_qty = inventory.quantity
-    if transaction.transaction_type == "in": # 입고면 +, 출고면 - 로 계산
-        after_qty = before_qty + transaction.quantity
-    else:
-        if transaction.quantity > before_qty: # 출고 시 → 재고보다 많으면 에러
-            raise HTTPException(status_code=400, detail="출고 수량이 재고보다 많습니다.") # 이 부분에서 에러 발생 가능성
-        after_qty = before_qty - transaction.quantity
+        # 2️⃣ 입고/출고 반영
+        if transaction.transaction_type not in ["in", "out"]:
+            raise HTTPException(status_code=400, detail="Invalid transaction type")
 
-    # 3️⃣ 트랜잭션 기록 저장
-    db_transaction = models.inventory_transaction.InventoryTransaction(
-        inventory_id=transaction.inventory_id,
-        transaction_type=transaction.transaction_type,
-        quantity=transaction.quantity,
-        before_quantity=before_qty,
-        after_quantity=after_qty,
-        memo=transaction.memo,
-    )
-    db.add(db_transaction)
+        before_qty = inventory.quantity
+        if transaction.transaction_type == "in":
+            after_qty = before_qty + transaction.quantity
+        else:
+            if transaction.quantity > before_qty:
+                raise HTTPException(status_code=400, detail="출고 수량이 재고보다 많습니다.")
+            after_qty = before_qty - transaction.quantity
 
-    # 4️⃣ 재고 업데이트
-    """
-    commit(): 트랜잭션을 DB에 영구 반영
-    refresh(): 새로 만든 트랜잭션 객체의 최신 상태 가져오기
-    """
-    inventory.quantity = after_qty # 재고 테이블의 quantity도 최신 값으로 업데이트
-    db.commit()
-    db.refresh(db_transaction)
-    return db_transaction
+        # 3️⃣ 트랜잭션 기록 저장
+        db_transaction = models.inventory_transaction.InventoryTransaction(
+            inventory_id=transaction.inventory_id,
+            transaction_type=transaction.transaction_type,
+            quantity=transaction.quantity,
+            before_quantity=before_qty,
+            after_quantity=after_qty,
+            memo=transaction.memo,
+        )
+        db.add(db_transaction)
+
+        # 4️⃣ 재고 업데이트
+        inventory.quantity = after_qty
+
+        # 5️⃣ 커밋
+        db.commit()
+        db.refresh(db_transaction)
+        return db_transaction
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Transaction failed: {str(e)}")
 
 # GET: 전체 트랜잭션 조회
 @router.get("/", response_model=List[inventory_transaction.InventoryTransactionResponse])
