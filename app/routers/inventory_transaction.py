@@ -9,7 +9,7 @@ List: 응답이 여러 건 반환될 때 사용
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
-from sqlalchemy.orm import Session, with_for_update
+from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from app.database.session import SessionLocal # DB 세션을 만들고 반환하는 함수 (SQLAlchemy 연결)
