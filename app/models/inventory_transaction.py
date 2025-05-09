@@ -1,12 +1,16 @@
 # 입출고 기록을 저장하는 InventoryTransaction 테이블 정의
 
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Index
 from sqlalchemy.orm import relationship
 from app.core.base import Base
 from datetime import datetime, timezone
 
 class InventoryTransaction(Base):
     __tablename__ = "inventory_transaction"
+    __table_args__ = (
+        Index("idx_inventory_id", "inventory_id"),
+        Index("idx_transaction_type", "transaction_type"),
+    )
 
     """
     transaction_type	'in' 또는 'out' (입고/출고 구분)

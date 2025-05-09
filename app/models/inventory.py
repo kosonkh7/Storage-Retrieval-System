@@ -1,13 +1,17 @@
 # 재고 정보를 저장하는 Inventory 테이블 정의
 
 # SQLAlchemy ORM 기본 도구 + 관계 설정
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Index
 from app.core.base import Base  # core에서 Base 가져오기
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 
 class Inventory(Base):
     __tablename__ = "inventory"  # 테이블 이름
+    __table_args__ = (
+        Index("idx_warehouse_id", "warehouse_id"),
+        Index("idx_product_id", "product_id"),
+    )
 
     id = Column(Integer, primary_key=True, index=True)
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)  # 물류센터 ID (FK)
