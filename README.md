@@ -5,8 +5,14 @@ FastAPI + SQLAlchemy + MySQL을 기반으로 실제 서비스 수준의 재고 �
 트랜잭션 제어 및 동시성 문제 대응, DB 성능 최적화까지 구현한 서비스입니다. <br>
 
 단순한 CRUD 서비스에서 더 나아가 <br>
-실제 운영 환경에서 발생할 수 있는 문제들을 설계 단계에서부터 가정하여 <br>
+실제 운영 환경에서 발생할 수 있는 문제들을 설계 단계에서부터 가정하였고<br>
 데이터 정합성과 성능을 확보하는 서비스 개발을 목표 했습니다. <br>
+
+- FastAPI 기반 확장 용이한 REST API 설계
+- SQLAlchemy ORM 기능 (트랜잭션, 락, 최적화) 적용
+- 데이터베이스 인덱스 최적화 및 쿼리 성능 분석
+- MSA 기반 서비스 설계 및 모듈화 아키텍처 경험
+- GitHub를 통한 프로젝트 문서화 및 오픈소스화
 
 # 기술 스택
 
@@ -46,15 +52,8 @@ FastAPI를 사용해 독립 모듈화된 라우터/스키마/모델/DB 분리
 
 컨테이너 환경(Docker) 배포까지 확장 가능성 고려
 
-
-# 주요 설계
-테이블	설명
-Warehouse	물류센터 정보
-Product	품목군 정보 (예: furniture, food)
-Inventory	창고별 품목 재고 상태
-InventoryTransaction	입출고 이력 기록
-
 📈 인덱스 최적화
+
 inventory(warehouse_id, product_id) → 창고 + 품목 복합 조회 최적화
 
 inventory_transaction(inventory_id, transaction_type) → 특정 품목 입출고 내역 필터링 속도 향상
@@ -62,34 +61,20 @@ inventory_transaction(inventory_id, transaction_type) → 특정 품목 입출�
 Slow Query 탐지 후 추가 인덱스 적용 → 확장 시 성능 문제 최소화
 
 🔐 트랜잭션 & 락 처리
+
 출고 처리 시, pessimistic lock 사용
+
 → 동일 재고의 동시 출고 요청 시, 데이터 충돌 방지
 
 예외 상황 (재고 부족, 잘못된 요청) 전부 HTTP 예외 처리로 방어
 
+
+
+# 데이터베이스 설계
+![image](https://github.com/user-attachments/assets/ffa0d13e-3198-46e3-83a8-f0544ae00c4a)
+
 # API 설계
-- GET	/inventory/	전체 재고 조회 <br>
-- GET	/inventory/{warehouse_id}	특정 창고 재고 조회 <br>
-- POST	/inventory/transaction/	입출고 트랜잭션 처리 <br>
-- GET	/inventory/transaction/	전체 입출고 내역 조회 <br>
-- GET	/inventory/transaction/{inventory_id}	특정 재고 입출고 내역 조회 <br>
-
-🌟 차별화 포인트
-✅ 단순 CRUD 프로젝트를 넘어서 트랜잭션 처리와 동시성 문제까지 고려한 설계
-✅ MySQL 인덱스 튜닝 및 쿼리 성능 최적화 적용
-✅ 실서비스에 필요한 API 모듈화 및 확장 가능성 고려
-✅ GitHub 문서화 → 누구나 읽고 따라할 수 있는 실전형 포트폴리오
-
-🏆 학습/성장 포인트
-FastAPI 기반 REST API 설계 및 배포 경험
-
-SQLAlchemy ORM 고급 기능 (트랜잭션, 락, 최적화) 실전 적용
-
-데이터베이스 인덱스 최적화 및 쿼리 성능 분석
-
-MSA 기반 서비스 설계 및 모듈화 아키텍처 경험
-
-GitHub를 통한 프로젝트 문서화 및 오픈소스화 준비
+![image](https://github.com/user-attachments/assets/386fdc68-730f-4d43-9b73-95b57d46b8ac)
 
 #  프로젝트 실행 방법
 ### 1️⃣ 의존성 설치
