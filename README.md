@@ -35,6 +35,39 @@ FastAPI + SQLAlchemy + MySQL을 기반으로 입출고 관리 API를 설계하�
 
 
 # 프로젝트 주요 특징
+<details>
+<summary> **Directory Structure** </summary>
+📦app <br>
+ ┣ 📂core <br>
+ ┃ ┗ 📜base.py <br>
+ ┣ 📂database <br>
+ ┃ ┣ 📂seed_data <br>
+ ┃ ┃ ┣ 📜logistics.csv <br>
+ ┃ ┃ ┗ 📜warehouse.csv <br>
+ ┃ ┣ 📜config.py <br>
+ ┃ ┣ 📜init_db.py <br>
+ ┃ ┣ 📜seed_from_csv.py <br>
+ ┃ ┣ 📜seed_product.py <br>
+ ┃ ┗ 📜session.py <br>
+ ┣ 📂models <br>
+ ┃ ┣ 📜inventory.py <br>
+ ┃ ┣ 📜inventory_transaction.py <br>
+ ┃ ┣ 📜product.py <br>
+ ┃ ┣ 📜warehouse.py <br>
+ ┃ ┗ 📜__init__.py <br>
+ ┣ 📂routers <br>
+ ┃ ┣ 📜inventory_router.py <br>
+ ┃ ┣ 📜inventory_transaction.py <br>
+ ┃ ┗ 📜warehouse.py <br>
+ ┣ 📂schemas <br>
+ ┃ ┣ 📜inventory_schema.py <br>
+ ┃ ┣ 📜inventory_transaction.py <br>
+ ┃ ┣ 📜product.py <br>
+ ┃ ┗ 📜warehouse.py <br>
+ ┃ <br>
+ ┗ 📜main.py <br>
+</details>
+
 ### ✅ 트랜잭션 기반 재고 정합성 보장
 
 입출고 처리 시 **SQLAlchemy**의 **pessimistic lock** (비관적 락)을 적용
