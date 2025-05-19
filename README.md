@@ -114,11 +114,19 @@ Slow Query 탐지 후 추가 인덱스 적용 예정 → 확장 시 성능 문�
 pip install -r requirements.txt
 ```
 
-### 2️⃣ MySQL DB 세팅 (+ 초기 데이터 삽입)
+### 2️⃣ MySQL DB 세팅 (+ 초기 데이터 삽입, env 파일 요구 사항)
 ```python
 python -m app.database.init_db
 python -m app.database.seed_from_csv
 python -m app.database.seed_product
+```
+```sql
+.env
+DB_USER=root (example)
+DB_PASSWORD=YOUR_PASSWORD
+DB_HOST=YOUR_HOST
+DB_PORT=3307 (example)
+DB_NAME=YOUR_DB_NAME
 ```
 
 ### 3️⃣ FastAPI 서버 실행

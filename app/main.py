@@ -10,7 +10,7 @@ from app.routers import inventory_router
 # 타이틀, 설명, 버전까지 메타데이터 지정 (Docs에 자동 반영됨)
 app = FastAPI(
     title="Inventory Management API",
-    description="🚚 실시간 입출고 재고 관리 시스템",
+    description="🚚 실시간 재고 입출고 관리 시스템",
     version="1.0.0",
 )
 
