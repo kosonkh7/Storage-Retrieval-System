@@ -9,7 +9,7 @@ __pycache__/
 .idea/
 .vscode/
 .git/
-.gitignore
+# .gitignore
 .DS_Store
 tests/
 memo.txt
