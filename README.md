@@ -100,6 +100,7 @@ Slow Query 탐지 후 추가 인덱스 적용 예정 → 확장 시 성능 문�
 
 예외 상황 (재고 부족, 잘못된 요청) 전부 HTTP 예외 처리로 방어
 
+### Github Actions을 이용한 Docker 이미지 자동 빌드
 
 
 # 데이터베이스 설계
@@ -138,8 +139,6 @@ uvicorn app.main:app --reload
 http://localhost:8000/docs
 
 # 향후 확장 계획
-- Docker로 서비스 컨테이너화 (최우선)
 - Alembic으로 마이그레이션 관리
 - FastAPI 비동기 처리로 성능 개선
-- GitHub Actions로 CI/CD 자동화 구축
 - Prometheus + Grafana로 모니터링 구축
