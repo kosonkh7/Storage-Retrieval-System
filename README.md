@@ -84,7 +84,7 @@ FastAPI를 사용해 독립 모듈화된 라우터/스키마/모델/DB 분리
 
 컨테이너 환경(Docker) 배포까지 확장 가능성 고려
 
-### 📈 인덱스 최적화
+### ✅ 인덱스 최적화
 
 inventory(warehouse_id, product_id) → 창고 + 품목 복합 조회 최적화
 
@@ -100,8 +100,11 @@ Slow Query 탐지 후 추가 인덱스 적용 예정 → 확장 시 성능 문�
 
 예외 상황 (재고 부족, 잘못된 요청) 전부 HTTP 예외 처리로 방어
 
-### Github Actions을 이용한 Docker 이미지 자동 빌드
+### 🔱Github Actions을 이용한 Docker 이미지 자동 빌드
 
+Github 본 레포지토리 main 브랜치에 push하면, 자동으로 Dockerhub의 본 서비스 이미지에도 push 하도록 설계
+
+kosonkh7/team4_storage_retrieval:v0.0.0 (버전 자동 관리는 추후 업데이트 예정)
 
 # 데이터베이스 설계
 ![image](https://github.com/user-attachments/assets/ffa0d13e-3198-46e3-83a8-f0544ae00c4a)
