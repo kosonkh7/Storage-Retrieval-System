@@ -1,6 +1,6 @@
-## 📦 FastAPI 기반 실시간 재고 입출고 관리 시스템
+# 📦 실시간 생활물류 재고 입출고 관리 시스템
 
-# 프로젝트 개요
+## 프로젝트 개요
 FastAPI + SQLAlchemy + MySQL을 기반으로 입출고 관리 API를 설계하고, <br>
 트랜잭션 제어 및 동시성 문제 대응, DB 성능 최적화까지 구현한 서비스입니다. <br>
 
@@ -13,7 +13,7 @@ FastAPI + SQLAlchemy + MySQL을 기반으로 입출고 관리 API를 설계하�
 - MSA 기반 서비스 설계 및 **모듈화 아키텍처** 경험
 - GitHub를 통한 프로젝트 문서화 및 오픈소스화
 
-# 기술 스택
+## 기술 스택
 
 ### 🔧 백엔드
 ![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -34,9 +34,9 @@ FastAPI + SQLAlchemy + MySQL을 기반으로 입출고 관리 API를 설계하�
 ![ERD](https://img.shields.io/badge/ERD%20Diagram-FF6F61?style=for-the-badge)
 
 
-# 프로젝트 주요 특징
+## 프로젝트 주요 특징
 <details>
-<summary> **Directory Structure** </summary>
+<summary> Directory Structure </summary>
 📦app <br>
  ┣ 📂core <br>
  ┃ ┗ 📜base.py <br>
@@ -106,19 +106,19 @@ Github 본 레포지토리 main 브랜치에 push하면, 자동으로 Dockerhub�
 
 kosonkh7/team4_storage_retrieval:v0.0.0 (버전 자동 관리는 추후 업데이트 예정)
 
-# 데이터베이스 설계
+## ERD
 ![image](https://github.com/user-attachments/assets/ffa0d13e-3198-46e3-83a8-f0544ae00c4a)
 
-# API 설계
+## API 설계
 ![image](https://github.com/user-attachments/assets/386fdc68-730f-4d43-9b73-95b57d46b8ac)
 
-#  프로젝트 실행 방법
+##  프로젝트 실행 방법
 ### 1️⃣ 의존성 설치
 ```
 pip install -r requirements.txt
 ```
 
-### 2️⃣ MySQL DB 세팅 (+ 초기 데이터 삽입, env 파일 요구 사항)
+### 2️⃣ MySQL DB 세팅 (+ 초기 데이터 삽입, .env 파일 요구 사항)
 ```python
 python -m app.database.init_db
 python -m app.database.seed_from_csv
@@ -141,7 +141,7 @@ uvicorn app.main:app --reload
 ### 4️⃣ Swagger UI에서 API 테스트
 http://localhost:8000/docs
 
-# 향후 확장 계획
+## 향후 계획
 - Alembic으로 마이그레이션 관리
 - FastAPI 비동기 처리로 성능 개선
 - Prometheus + Grafana로 모니터링 구축
